@@ -13,6 +13,8 @@ class Color:
 		self.b = b
 		self.a = a
 
+	def __add__(self, c):
+		return Color((self.r + c.r)/2, (self.g + c.g)/2, (self.b + c.b)/2, (self.a + c.a)/2)
 	def get_tuple(self):
 		return self.r, self.g, self.b, self.a
 

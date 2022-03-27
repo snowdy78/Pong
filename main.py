@@ -2,9 +2,47 @@ from config import *
 import random
 
 
+
+def main(name, icon=None):
+    pg.init()
+    pg.mixer.init()
+    screen = pg.display.set_mode((1920, 1080), SCALED)
+    pg.display.set_caption(name)
+    if type(icon) is pg.Surface:
+        pg.display.set_icon(icon)
+    vres = Vector2(screen.get_size())
+    bsize = Vector2(vres/8)
+    global start_button
+    start_button = Button(Vector2(vres)/2, Vector2(bsize), 80, "START")
+    start_button.color = Color(255, 255, 255)
+    start_button.bg_color = Color(230, 120, 230)
+    clr = Color(230, 120, 230)
+    before = pg.mouse.get_pressed()
+    start_game = False
+    while 1:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                return
+        start_button.wait_for(before)
+        before = pg.mouse.get_pressed()
+        if start_button.intersect:
+            start_button.bg_color = clr + Color(255, 255, 255)
+        if not start_button.intersect:
+            start_button.bg_color = clr
+        if start_button.pressed:
+            start_game = True
+            break
+        start_button.draw(screen)
+        pg.display.update()
+    if start_game:
+        game(screen)
+
+def if_pressed(screen):
+    game(screen)
+
 def get_clicked(before: bool, after: bool):
     return not before and after
-
 
 def draw_points(screen, points):
     if points:
@@ -14,7 +52,7 @@ def draw_points(screen, points):
             c.draw(screen)
 
 def get_text_width(text: str, char_size: int):
-    return floor(len(text) * char_size / 2.926829268292683)
+    return floor(len(text) * char_size / 2.926829268292683) # yes is it magic number 
 
 
 def test1(screen: pg.Surface):
@@ -182,16 +220,6 @@ def game(screen: pg.Surface):
         sliderR.draw(screen)
         ball.draw(screen)
         pg.display.update()
-
-
-def main(name, icon=None):
-    pg.init()
-    pg.mixer.init()
-    screen = pg.display.set_mode((1920, 1080), SCALED)
-    pg.display.set_caption(name)
-    if type(icon) is pg.Surface:
-        pg.display.set_icon(icon)
-    test2(screen)
 
 
 if __name__ == '__main__':
